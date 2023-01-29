@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 import org.teacon.slides.Slideshow;
+import org.teacon.slides.config.Config;
 
 import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
@@ -66,7 +67,11 @@ public final class ImageCache {
 			throw new RuntimeException("Failed to create cache directory for slide images.", e);
 		}
 		mCacheStorage = new CacheStorage(dir);
-		mHttpClient = CachingHttpClients.custom().setCacheConfig(CONFIG).setHttpCacheStorage(mCacheStorage).build();
+		if (Config.isProxySwitch()) {
+			mHttpClient = CachingHttpClients.custom().setCacheConfig(CONFIG).setHttpCacheStorage(mCacheStorage).setProxy(Config.PROXY).build();
+		} else {
+			mHttpClient = CachingHttpClients.custom().setCacheConfig(CONFIG).setHttpCacheStorage(mCacheStorage).build();
+		}
 	}
 
 	@Nonnull

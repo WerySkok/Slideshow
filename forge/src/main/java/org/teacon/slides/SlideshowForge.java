@@ -39,7 +39,7 @@ public class SlideshowForge {
 		eventBus.register(SlideshowModEventBus.class);
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			MinecraftForge.EVENT_BUS.register(ForgeUtilities.Events.class);
-			eventBus.register(ForgeUtilities.RegisterEntityRenderer.class);
+			eventBus.register(ForgeUtilities.ClientsideEvents.class);
 		});
 	}
 
