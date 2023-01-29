@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
 import org.teacon.slides.Registries;
+import org.teacon.slides.config.Config;
 import org.teacon.slides.mappings.BlockEntityClientSerializableMapper;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -20,6 +21,7 @@ public final class ProjectorBlockEntity extends BlockEntityClientSerializableMap
 	public float mOffsetY = 0;
 	public float mOffsetZ = 0;
 	public boolean mDoubleSided = true;
+	private static final double VIEW_DISTANCE = Config.getViewDistance();
 
 	public ProjectorBlockEntity(BlockPos blockPos, BlockState blockState) {
 		super(Registries.BLOCK_ENTITY.get(), blockPos, blockState);
@@ -49,5 +51,10 @@ public final class ProjectorBlockEntity extends BlockEntityClientSerializableMap
 		mOffsetY = compoundTag.getFloat("OffsetY");
 		mOffsetZ = compoundTag.getFloat("OffsetZ");
 		mDoubleSided = compoundTag.getBoolean("DoubleSided");
+	}
+
+	@Override
+	public double getViewDistance(){
+		return VIEW_DISTANCE;
 	}
 }

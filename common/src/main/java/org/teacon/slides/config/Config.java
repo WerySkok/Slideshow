@@ -19,15 +19,22 @@ public class Config {
     private static boolean proxySwitch = false;
     private static String host = "127.0.0.1";
     private static int port = 8080;
+    private static double viewDistance = 128.0;
     public static HttpHost PROXY;
 
     private static final String PROXY_SWITCH = "proxySwitch";
     private static final String HOST = "host";
     private static final String PORT = "port";
+    private static final String VIEW_DISTANCE = "slideshowViewDistance";
+
     private static final Path CONFIG_PATH = Minecraft.getInstance().gameDirectory.toPath().resolve("config").resolve("slideshow.json");
 
     public static boolean isProxySwitch() {
         return proxySwitch;
+    }
+
+    public static double getViewDistance() {
+        return viewDistance;
     }
 
     public static void refreshProperties() {
@@ -44,6 +51,10 @@ public class Config {
             }
             try {
                 port = jsonConfig.get(PORT).getAsInt();
+            } catch (Exception ignored) {
+            }
+            try {
+                viewDistance = jsonConfig.get(VIEW_DISTANCE).getAsDouble();
             } catch (Exception ignored) {
             }
             if (proxySwitch) {
@@ -66,8 +77,9 @@ public class Config {
         jsonConfig.addProperty(PROXY_SWITCH, proxySwitch);
         jsonConfig.addProperty(HOST, host);
         jsonConfig.addProperty(PORT, port);
+        jsonConfig.addProperty(VIEW_DISTANCE, viewDistance);
         try {
-            if(!Files.exists(CONFIG_PATH.getParent())){
+            if (!Files.exists(CONFIG_PATH.getParent())) {
                 Files.createDirectories(CONFIG_PATH.getParent());
             }
             Files.write(CONFIG_PATH, Collections.singleton(prettyPrint(jsonConfig)));
