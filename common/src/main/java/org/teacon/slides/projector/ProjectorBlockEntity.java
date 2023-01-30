@@ -53,7 +53,6 @@ public final class ProjectorBlockEntity extends BlockEntityClientSerializableMap
 		mDoubleSided = compoundTag.getBoolean("DoubleSided");
 	}
 
-	@Override
 	public double getViewDistance(){
 		return VIEW_DISTANCE;
 	}

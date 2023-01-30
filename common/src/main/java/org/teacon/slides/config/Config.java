@@ -19,7 +19,7 @@ public class Config {
     private static boolean proxySwitch = false;
     private static String host = "127.0.0.1";
     private static int port = 8080;
-    private static double viewDistance = 128.0;
+    private static int viewDistance = 128;
     public static HttpHost PROXY;
 
     private static final String PROXY_SWITCH = "proxySwitch";
@@ -33,7 +33,7 @@ public class Config {
         return proxySwitch;
     }
 
-    public static double getViewDistance() {
+    public static int getViewDistance() {
         return viewDistance;
     }
 
@@ -54,7 +54,7 @@ public class Config {
             } catch (Exception ignored) {
             }
             try {
-                viewDistance = jsonConfig.get(VIEW_DISTANCE).getAsDouble();
+                viewDistance = jsonConfig.get(VIEW_DISTANCE).getAsInt();
             } catch (Exception ignored) {
             }
             if (proxySwitch) {

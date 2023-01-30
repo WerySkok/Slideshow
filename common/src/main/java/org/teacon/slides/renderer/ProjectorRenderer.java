@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import org.teacon.slides.config.Config;
 import org.teacon.slides.mappings.BlockEntityRendererMapper;
 import org.teacon.slides.projector.ProjectorBlock;
 import org.teacon.slides.projector.ProjectorBlockEntity;
@@ -17,6 +18,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public class ProjectorRenderer extends BlockEntityRendererMapper<ProjectorBlockEntity> {
+	private static final int VIEW_DISTANCE = Config.getViewDistance();
 
 	public ProjectorRenderer(BlockEntityRenderDispatcher dispatcher) {
 		super(dispatcher);
@@ -82,5 +84,9 @@ public class ProjectorRenderer extends BlockEntityRendererMapper<ProjectorBlockE
 	public boolean shouldRenderOffScreen(ProjectorBlockEntity tile) {
 		// global rendering
 		return true;
+	}
+
+	public int getViewDistance() {
+		return VIEW_DISTANCE;
 	}
 }
