@@ -21,7 +21,6 @@ public final class ProjectorBlockEntity extends BlockEntityClientSerializableMap
 	public float mOffsetY = 0;
 	public float mOffsetZ = 0;
 	public boolean mDoubleSided = true;
-	private static final double VIEW_DISTANCE = Config.getViewDistance();
 
 	public ProjectorBlockEntity(BlockPos blockPos, BlockState blockState) {
 		super(Registries.BLOCK_ENTITY.get(), blockPos, blockState);
@@ -54,6 +53,6 @@ public final class ProjectorBlockEntity extends BlockEntityClientSerializableMap
 	}
 
 	public double getViewDistance(){
-		return VIEW_DISTANCE;
+		return Config.getViewDistance();
 	}
 }
