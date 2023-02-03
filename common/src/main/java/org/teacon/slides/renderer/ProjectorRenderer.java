@@ -3,6 +3,8 @@ package org.teacon.slides.renderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -86,6 +88,7 @@ public class ProjectorRenderer extends BlockEntityRendererMapper<ProjectorBlockE
 		return true;
 	}
 
+	@Environment(EnvType.CLIENT)
 	public int getViewDistance() {
 		return VIEW_DISTANCE;
 	}

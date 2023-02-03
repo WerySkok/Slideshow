@@ -1,5 +1,7 @@
 package org.teacon.slides.projector;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
@@ -52,6 +54,7 @@ public final class ProjectorBlockEntity extends BlockEntityClientSerializableMap
 		mDoubleSided = compoundTag.getBoolean("DoubleSided");
 	}
 
+	@Environment(EnvType.CLIENT)
 	public double getViewDistance(){
 		return Config.getViewDistance();
 	}
