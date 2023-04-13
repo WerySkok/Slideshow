@@ -39,6 +39,7 @@ public class Config {
 
     public static void refreshProperties() {
         LOGGER.info("Refreshed Slideshow mod config");
+        System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2,TLSv1.3,SSLv3");
         try {
             final JsonObject jsonConfig = new JsonParser().parse(String.join("", Files.readAllLines(CONFIG_PATH))).getAsJsonObject();
             try {
