@@ -22,6 +22,9 @@
 		],
 		"main": [
 			"org.teacon.slides.SlideshowFabric"
+		],
+		"modmenu": [
+			"org.teacon.slides.ModMenuConfig"
 		]
 	},
 	"mixins": [

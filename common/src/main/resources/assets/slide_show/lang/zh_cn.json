@@ -14,5 +14,13 @@
 
     "gui.slide_show.section.image": "图片属性",
     "gui.slide_show.section.offset": "幻灯片平移",
-    "gui.slide_show.section.others": "其他"
+    "gui.slide_show.section.others": "其他",
+
+    "options.slider_show.on": "启用",
+    "options.slider_show.off": "禁用",
+    "gui.slide_show.options": "Slideshow设置",
+    "options.slide_show.proxy_switch": "是否启用代理",
+    "options.slide_show.host": "代理地址",
+    "options.slide_show.port": "代理端口",
+    "options.slide_show.view_distance": "图片最大可视距离"
 }

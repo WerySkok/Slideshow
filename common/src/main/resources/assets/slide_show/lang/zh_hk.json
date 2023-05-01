@@ -14,5 +14,13 @@
 
     "gui.slide_show.section.image": "圖片屬性",
     "gui.slide_show.section.offset": "投影片平移",
-    "gui.slide_show.section.others": "其他"
+    "gui.slide_show.section.others": "其他",
+
+    "options.slider_show.on": "啟用",
+    "options.slider_show.off": "禁用",
+    "gui.slide_show.options": "Slideshow設置",
+    "options.slide_show.proxy_switch": "是否啟用代理",
+    "options.slide_show.host": "代理地址",
+    "options.slide_show.port": "代理端口",
+    "options.slide_show.view_distance": "圖片最大可視距離"
 }

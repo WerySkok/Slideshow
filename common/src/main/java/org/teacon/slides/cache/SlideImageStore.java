@@ -73,7 +73,7 @@ public final class SlideImageStore {
 		}
 		mCacheStorage = new CacheStorage(dir);
 		if(Config.isProxySwitch()){
-			mHttpClient = CachingHttpClients.custom().setCacheConfig(CONFIG).setHttpCacheStorage(mCacheStorage).setProxy(Config.PROXY).build();
+			mHttpClient = CachingHttpClients.custom().setCacheConfig(CONFIG).setHttpCacheStorage(mCacheStorage).setProxy(Config.getPROXY()).build();
 		} else {
 			mHttpClient = CachingHttpClients.custom().setCacheConfig(CONFIG).setHttpCacheStorage(mCacheStorage).build();
 		}

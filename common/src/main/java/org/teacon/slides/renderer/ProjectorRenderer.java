@@ -20,7 +20,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public class ProjectorRenderer extends BlockEntityRendererMapper<ProjectorBlockEntity> {
-	private static final int VIEW_DISTANCE = Config.getViewDistance();
 
 	public ProjectorRenderer(BlockEntityRenderDispatcher dispatcher) {
 		super(dispatcher);
@@ -90,6 +89,6 @@ public class ProjectorRenderer extends BlockEntityRendererMapper<ProjectorBlockE
 
 	@Environment(EnvType.CLIENT)
 	public int getViewDistance() {
-		return VIEW_DISTANCE;
+		return Config.getViewDistance();
 	}
 }

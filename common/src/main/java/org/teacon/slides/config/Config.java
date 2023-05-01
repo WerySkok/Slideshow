@@ -20,12 +20,13 @@ public class Config {
     private static String host = "127.0.0.1";
     private static int port = 8080;
     private static int viewDistance = 128;
-    public static HttpHost PROXY;
+    private static HttpHost PROXY;
 
     private static final String PROXY_SWITCH = "proxySwitch";
     private static final String HOST = "host";
     private static final String PORT = "port";
     private static final String VIEW_DISTANCE = "slideshowViewDistance";
+    public static final int MAX_VIEW_DISTANCE = 256;
 
     private static final Path CONFIG_PATH = Minecraft.getInstance().gameDirectory.toPath().resolve("config").resolve("slideshow.json");
 
@@ -37,9 +38,44 @@ public class Config {
         return viewDistance;
     }
 
+    public static String getHost() {
+        return host;
+    }
+
+    public static int getPort() {
+        return port;
+    }
+
+    public static HttpHost getPROXY() {
+        return PROXY;
+    }
+
+    public static boolean setProxySwitch(boolean proxySwitch) {
+        Config.proxySwitch = proxySwitch;
+        writeToFile();
+        return proxySwitch;
+    }
+
+    public static String setHost(String host) {
+        Config.host = host;
+        writeToFile();
+        return host;
+    }
+
+    public static int setPort(int port) {
+        Config.port = port;
+        writeToFile();
+        return port;
+    }
+
+    public static int setViewDistance(int viewDistance) {
+        Config.viewDistance = viewDistance;
+        writeToFile();
+        return viewDistance;
+    }
+
     public static void refreshProperties() {
         LOGGER.info("Refreshed Slideshow mod config");
-        System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2,TLSv1.3,SSLv3");
         try {
             final JsonObject jsonConfig = new JsonParser().parse(String.join("", Files.readAllLines(CONFIG_PATH))).getAsJsonObject();
             try {

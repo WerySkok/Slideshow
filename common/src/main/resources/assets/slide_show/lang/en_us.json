@@ -14,5 +14,13 @@
 
     "gui.slide_show.section.image": "Image Properties",
     "gui.slide_show.section.offset": "Slide Offset",
-    "gui.slide_show.section.others": "Others"
+    "gui.slide_show.section.others": "Others",
+
+    "options.slider_show.on": "Enable",
+    "options.slider_show.off": "Disabled",
+    "gui.slide_show.options": "Slideshow Options",
+    "options.slide_show.proxy_switch": "Enable proxy",
+    "options.slide_show.host": "Host",
+    "options.slide_show.port": "Port",
+    "options.slide_show.view_distance": "Max View Distance"
 }
