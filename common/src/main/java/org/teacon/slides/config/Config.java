@@ -20,12 +20,16 @@ public class Config {
     private static String host = "127.0.0.1";
     private static int port = 8080;
     private static int viewDistance = 128;
+    private static boolean disableTextureLod = true;
+    private static boolean disableMipmap = true;
     private static HttpHost PROXY;
 
     private static final String PROXY_SWITCH = "proxySwitch";
     private static final String HOST = "host";
     private static final String PORT = "port";
     private static final String VIEW_DISTANCE = "slideshowViewDistance";
+    private static final String DISABLE_MIPMAP = "disableMipmap";
+    private static final String DISABLE_TEXTURE_LOD = "disableTextureLod";
     public static final int MAX_VIEW_DISTANCE = 256;
 
     private static final Path CONFIG_PATH = Minecraft.getInstance().gameDirectory.toPath().resolve("config").resolve("slideshow.json");
@@ -74,6 +78,22 @@ public class Config {
         return viewDistance;
     }
 
+    public static boolean getDisableMipmap() {
+        return disableMipmap;
+    }
+
+    public static void setDisableMipmap(boolean disableMipmap) {
+        Config.disableMipmap = disableMipmap;
+    }
+
+    public static boolean getDisableTextureLod() {
+        return disableTextureLod;
+    }
+
+    public static void setDisableTextureLod(boolean disableTextureLod) {
+        Config.disableTextureLod = disableTextureLod;
+    }
+
     public static void refreshProperties() {
         LOGGER.info("Refreshed Slideshow mod config");
         try {
@@ -92,6 +112,14 @@ public class Config {
             }
             try {
                 viewDistance = jsonConfig.get(VIEW_DISTANCE).getAsInt();
+            } catch (Exception ignored) {
+            }
+            try {
+                disableMipmap = jsonConfig.get(DISABLE_MIPMAP).getAsBoolean();
+            } catch (Exception ignored) {
+            }
+            try {
+                disableTextureLod = jsonConfig.get(DISABLE_TEXTURE_LOD).getAsBoolean();
             } catch (Exception ignored) {
             }
             if (proxySwitch) {
@@ -114,6 +142,8 @@ public class Config {
         jsonConfig.addProperty(PROXY_SWITCH, proxySwitch);
         jsonConfig.addProperty(HOST, host);
         jsonConfig.addProperty(PORT, port);
+        jsonConfig.addProperty(DISABLE_MIPMAP, disableMipmap);
+        jsonConfig.addProperty(DISABLE_TEXTURE_LOD, disableTextureLod);
         jsonConfig.addProperty(VIEW_DISTANCE, viewDistance);
         try {
             if (!Files.exists(CONFIG_PATH.getParent())) {

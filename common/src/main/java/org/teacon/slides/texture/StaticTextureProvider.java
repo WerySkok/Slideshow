@@ -3,6 +3,7 @@ package org.teacon.slides.texture;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.NativeImage;
 import org.lwjgl.system.MemoryUtil;
+import org.teacon.slides.config.Config;
 import org.teacon.slides.renderer.SlideRenderType;
 
 import javax.annotation.Nonnull;
@@ -30,7 +31,13 @@ public final class StaticTextureProvider implements TextureProvider {
 		try (NativeImage image = NativeImage.read(buffer)) {
 			mWidth = image.getWidth();
 			mHeight = image.getHeight();
-			final int maxLevel = Math.min(31 - Integer.numberOfLeadingZeros(Math.max(mWidth, mHeight)), 4);
+			final int maxLevel;
+
+			if(Config.getDisableTextureLod()) {
+				maxLevel = 0;
+			} else {
+				maxLevel = Math.min(31 - Integer.numberOfLeadingZeros(Math.max(mWidth, mHeight)), 4);
+			}
 
 			mTexture = glGenTextures();
 			GlStateManager._bindTexture(mTexture);
@@ -46,7 +53,7 @@ public final class StaticTextureProvider implements TextureProvider {
 			}
 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			if(!Config.getDisableMipmap()) glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
