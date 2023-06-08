@@ -3,7 +3,7 @@
 	"id": "slide_show",
 	"version": "${version}",
 	"name": "Slideshow",
-	"description": "A simple slideshow projector in Minecraft.",
+	"description": "A simple slideshow projector in Minecraft, forked for use in the District of Joban to provide a more native experience.",
 	"authors": [
 		"3TUSK",
 		"ustc_zzzz",
@@ -11,7 +11,7 @@
 		"Jonathan Ho"
 	],
 	"contact": {
-		"homepage": "https://github.com/jonafanho/Slideshow"
+		"homepage": "https://github.com/DistrictOfJoban/Slideshow"
 	},
 	"license": "BSD-3-Clause",
 	"icon": "icon.png",
