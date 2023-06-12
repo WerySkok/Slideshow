@@ -22,7 +22,7 @@ public abstract class Slide implements AutoCloseable {
 
 	public abstract void render(@Nonnull MultiBufferSource source, @Nonnull Matrix4f matrix,
 								@Nonnull Matrix3f normal, float width, float height, int color,
-								int light, int overlay, boolean front, boolean back, long tick, float partialTick);
+								int light, int overlay, boolean front, boolean back, boolean enableLod, long tick, float partialTick);
 
 	@Override
 	public void close() {
@@ -68,9 +68,9 @@ public abstract class Slide implements AutoCloseable {
 		@Override
 		public void render(@Nonnull MultiBufferSource source, @Nonnull Matrix4f matrix,
 						   @NotNull Matrix3f normal, float width, float height, int color,
-						   int light, int overlay, boolean front, boolean back, long tick, float partialTick) {
+						   int light, int overlay, boolean front, boolean back, boolean enableLod, long tick, float partialTick) {
 			int red = (color >> 16) & 255, green = (color >> 8) & 255, blue = color & 255, alpha = color >>> 24;
-			VertexConsumer builder = source.getBuffer(mTexture.updateAndGet(tick, partialTick));
+			VertexConsumer builder = source.getBuffer(mTexture.updateAndGet(tick, partialTick, enableLod));
 			if (front) {
 				builder.vertex(matrix, 0, 1 / 192F, 1)
 						.color(red, green, blue, alpha).uv(0, 1)
@@ -160,7 +160,7 @@ public abstract class Slide implements AutoCloseable {
 		@Override
 		public void render(@Nonnull MultiBufferSource source, @Nonnull Matrix4f matrix,
 						   @NotNull Matrix3f normal, float width, float height, int color,
-						   int light, int overlay, boolean front, boolean back, long tick, float partialTick) {
+						   int light, int overlay, boolean front, boolean back, boolean enableLod, long tick, float partialTick) {
 			int alpha = color >>> 24;
 			float factor = getFactor(width, height);
 			int xSize = Math.round(width / factor), ySize = Math.round(height / factor);

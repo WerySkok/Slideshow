@@ -88,7 +88,7 @@ public final class AnimatedTextureProvider implements TextureProvider {
 
 	@Nonnull
 	@Override
-	public SlideRenderType updateAndGet(long tick, float partialTick) {
+	public SlideRenderType updateAndGet(long tick, float partialTick, boolean enableLod) {
 		long timeMillis = (long) ((tick + partialTick) * 50);
 		if (mFrameStartTime == 0) {
 			mFrameStartTime = timeMillis;

@@ -11,6 +11,7 @@
     "gui.slide_show.flip": "Flip Horizontal",
     "gui.slide_show.rotate": "Rotate Clockwise",
     "gui.slide_show.single_double_sided": "Toggle Single-Sided / Double-Sided",
+    "gui.slide_show.enable_disable_lod": "Toggle Texture LOD & Mipmap filtering",
 
     "gui.slide_show.section.image": "Image Properties",
     "gui.slide_show.section.offset": "Slide Offset",

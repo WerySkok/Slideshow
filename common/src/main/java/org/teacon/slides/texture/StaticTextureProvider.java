@@ -18,11 +18,18 @@ import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
 
 public final class StaticTextureProvider implements TextureProvider {
 
+	private final byte[] data;
+	private SlideRenderType mRenderType;
 	private int mTexture;
-	private final SlideRenderType mRenderType;
-	private final int mWidth, mHeight;
+	private boolean enableLod = false;
+	private int mWidth, mHeight;
 
 	public StaticTextureProvider(@Nonnull byte[] data) {
+		this.data = data;
+		generateTexture(enableLod);
+	}
+
+	private void generateTexture(boolean enableLod) {
 		// copy to native memory
 		ByteBuffer buffer = MemoryUtil.memAlloc(data.length)
 				.put(data)
@@ -33,7 +40,7 @@ public final class StaticTextureProvider implements TextureProvider {
 			mHeight = image.getHeight();
 			final int maxLevel;
 
-			if(Config.getDisableTextureLod()) {
+			if(!enableLod) {
 				maxLevel = 0;
 			} else {
 				maxLevel = Math.min(31 - Integer.numberOfLeadingZeros(Math.max(mWidth, mHeight)), 4);
@@ -53,7 +60,7 @@ public final class StaticTextureProvider implements TextureProvider {
 			}
 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			if(!Config.getDisableMipmap()) glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			if(enableLod) glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -85,7 +92,12 @@ public final class StaticTextureProvider implements TextureProvider {
 
 	@Nonnull
 	@Override
-	public SlideRenderType updateAndGet(long tick, float partialTick) {
+	public SlideRenderType updateAndGet(long tick, float partialTick, boolean enableLod) {
+		if(this.enableLod != enableLod) {
+			this.enableLod = enableLod;
+			close();
+			generateTexture(enableLod);
+		}
 		return mRenderType;
 	}
 

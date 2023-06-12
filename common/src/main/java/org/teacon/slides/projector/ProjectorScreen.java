@@ -46,7 +46,8 @@ public final class ProjectorScreen extends ScreenMapper {
 			OFFSET_Z_TEXT = Text.translatable("gui.slide_show.offset_z"),
 			FLIP_TEXT = Text.translatable("gui.slide_show.flip"),
 			ROTATE_TEXT = Text.translatable("gui.slide_show.rotate"),
-			SINGLE_DOUBLE_SIDED_TEXT = Text.translatable("gui.slide_show.single_double_sided");
+			SINGLE_DOUBLE_SIDED_TEXT = Text.translatable("gui.slide_show.single_double_sided"),
+			DISABLE_LOD_TEXT = Text.translatable("gui.slide_show.enable_disable_lod");
 
 	private EditBox mURLInput;
 	private EditBox mColorInput;
@@ -58,7 +59,10 @@ public final class ProjectorScreen extends ScreenMapper {
 
 	private ImageButton mSwitchSingleSided;
 	private ImageButton mSwitchDoubleSided;
+	private ImageButton mSwitchDisableLod;
+	private ImageButton mSwitchEnableLod;
 
+	private boolean mDisableLod;
 	private boolean mDoubleSided;
 	private int mImageColor = ~0;
 	private Vec2 mImageSize = Vec2.ONE;
@@ -80,7 +84,7 @@ public final class ProjectorScreen extends ScreenMapper {
 		BlockEntity blockEntity = Minecraft.getInstance().level.getBlockEntity(pos);
 		mEntity = blockEntity instanceof ProjectorBlockEntity ? (ProjectorBlockEntity) blockEntity : null;
 		imageWidth = 176;
-		imageHeight = 217;
+		imageHeight = 240;
 	}
 
 	public static void openScreen(Minecraft minecraftClient, FriendlyByteBuf packet) {
@@ -234,11 +238,28 @@ public final class ProjectorScreen extends ScreenMapper {
 			mSwitchSingleSided.visible = true;
 			mSwitchDoubleSided.visible = false;
 		});
+		mSwitchDisableLod = new ImageButton(leftPos + 9, topPos + 175, 18, 19, 179, 113, 0, GUI_TEXTURE, button -> {
+			mDisableLod = true;
+			mSwitchDisableLod.visible = false;
+			mSwitchEnableLod.visible = true;
+		});
+
+		mSwitchEnableLod = new ImageButton(leftPos + 9, topPos + 175, 18, 19, 179, 113, 0, GUI_TEXTURE, button -> {
+			mDisableLod = false;
+			mSwitchDisableLod.visible = true;
+			mSwitchEnableLod.visible = false;
+		});
 		mDoubleSided = mEntity.mDoubleSided;
+		mDisableLod = mEntity.mDisableLod;
 		mSwitchDoubleSided.visible = !mDoubleSided;
 		mSwitchSingleSided.visible = mDoubleSided;
+		mSwitchDisableLod.visible = !mEntity.mDisableLod;
+		mSwitchEnableLod.visible = mEntity.mDisableLod;
+
 		addDrawableChild(mSwitchSingleSided);
 		addDrawableChild(mSwitchDoubleSided);
+		addDrawableChild(mSwitchDisableLod);
+		addDrawableChild(mSwitchEnableLod);
 	}
 
 	private void updateRotation(ProjectorBlock.InternalRotation newRotation) {
@@ -303,6 +324,7 @@ public final class ProjectorScreen extends ScreenMapper {
 			mEntity.mOffsetZ = mImageOffset.z();
 		}
 		mEntity.mDoubleSided = mDoubleSided;
+		mEntity.mDisableLod = mDisableLod;
 		new ProjectorUpdatePacket(mEntity, mRotation).sendToServer();
 	}
 
@@ -369,6 +391,8 @@ public final class ProjectorScreen extends ScreenMapper {
 				renderTooltip(matrices, ROTATE_TEXT, mouseX, mouseY);
 			} else if (offsetX >= 9 && offsetY >= 153 && offsetX < 27 && offsetY < 172) {
 				renderTooltip(matrices, SINGLE_DOUBLE_SIDED_TEXT, mouseX, mouseY);
+			} else if (offsetX >= 9 && offsetY >= 175 && offsetX < 27 && offsetY < 194) {
+				renderTooltip(matrices, DISABLE_LOD_TEXT, mouseX, mouseY);
 			}
 		}
 	}
