@@ -238,13 +238,13 @@ public final class ProjectorScreen extends ScreenMapper {
 			mSwitchSingleSided.visible = true;
 			mSwitchDoubleSided.visible = false;
 		});
-		mSwitchDisableLod = new ImageButton(leftPos + 9, topPos + 175, 18, 19, 179, 113, 0, GUI_TEXTURE, button -> {
+		mSwitchDisableLod = new ImageButton(leftPos + 9, topPos + 175, 18, 19, 179, 73, 0, GUI_TEXTURE, button -> {
 			mDisableLod = true;
 			mSwitchDisableLod.visible = false;
 			mSwitchEnableLod.visible = true;
 		});
 
-		mSwitchEnableLod = new ImageButton(leftPos + 9, topPos + 175, 18, 19, 179, 113, 0, GUI_TEXTURE, button -> {
+		mSwitchEnableLod = new ImageButton(leftPos + 9, topPos + 175, 18, 19, 179, 93, 0, GUI_TEXTURE, button -> {
 			mDisableLod = false;
 			mSwitchDisableLod.visible = true;
 			mSwitchEnableLod.visible = false;
