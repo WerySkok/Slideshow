@@ -19,14 +19,13 @@ import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
 public final class StaticTextureProvider implements TextureProvider {
 
 	private final byte[] data;
-	private SlideRenderType mRenderType;
+	private SlideRenderType mRenderType = null;
 	private int mTexture;
 	private boolean enableLod = false;
 	private int mWidth, mHeight;
 
 	public StaticTextureProvider(@Nonnull byte[] data) {
 		this.data = data;
-		generateTexture(enableLod);
 	}
 
 	private void generateTexture(boolean enableLod) {
@@ -93,11 +92,15 @@ public final class StaticTextureProvider implements TextureProvider {
 	@Nonnull
 	@Override
 	public SlideRenderType updateAndGet(long tick, float partialTick, boolean enableLod) {
-		if(this.enableLod != enableLod) {
+		boolean needUpdateLod = this.enableLod != enableLod;
+		if(needUpdateLod || mRenderType == null) {
 			this.enableLod = enableLod;
-			close();
+			if(needUpdateLod) {
+				close();
+			}
 			generateTexture(enableLod);
 		}
+
 		return mRenderType;
 	}
 
