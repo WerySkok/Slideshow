@@ -9,6 +9,7 @@ import org.teacon.slides.renderer.SlideRenderType;
 import javax.annotation.Nonnull;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
 import static org.lwjgl.opengl.GL11C.*;
@@ -17,18 +18,11 @@ import static org.lwjgl.opengl.GL14C.GL_TEXTURE_LOD_BIAS;
 import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
 
 public final class StaticTextureProvider implements TextureProvider {
-
-	private final byte[] data;
-	private SlideRenderType mRenderType = null;
+	private final SlideRenderType mRenderType;
 	private int mTexture;
-	private boolean enableLod = false;
-	private int mWidth, mHeight;
+	private final int mWidth, mHeight;
 
-	public StaticTextureProvider(@Nonnull byte[] data) {
-		this.data = data;
-	}
-
-	private void generateTexture(boolean enableLod) {
+	public StaticTextureProvider(@Nonnull byte[] data, boolean enableLod) {
 		// copy to native memory
 		ByteBuffer buffer = MemoryUtil.memAlloc(data.length)
 				.put(data)
@@ -91,16 +85,7 @@ public final class StaticTextureProvider implements TextureProvider {
 
 	@Nonnull
 	@Override
-	public SlideRenderType updateAndGet(long tick, float partialTick, boolean enableLod) {
-		boolean needUpdateLod = this.enableLod != enableLod;
-		if(needUpdateLod || mRenderType == null) {
-			this.enableLod = enableLod;
-			if(needUpdateLod) {
-				close();
-			}
-			generateTexture(enableLod);
-		}
-
+	public SlideRenderType updateAndGet(long tick, float partialTick) {
 		return mRenderType;
 	}
 

@@ -32,7 +32,7 @@ public final class SlideState {
 	private static final int CLEANER_INTERVAL_SECONDS = 720; // 12min
 	private static int sCleanerTimer;
 
-	private static final AtomicReference<ConcurrentHashMap<String, SlideState>> sCache;
+	private static final AtomicReference<ConcurrentHashMap<SlideStateProperties, SlideState>> sCache;
 
 	static {
 		sCache = new AtomicReference<>(new ConcurrentHashMap<>());
@@ -41,7 +41,7 @@ public final class SlideState {
 	public static void tick(Minecraft client) {
 		if (!client.isPaused()) {
 			if (++sAnimationTick % 20 == 0) {
-				ConcurrentHashMap<String, SlideState> map = sCache.getAcquire();
+				ConcurrentHashMap<SlideStateProperties, SlideState> map = sCache.getAcquire();
 				if (!map.isEmpty()) {
 					map.entrySet().removeIf(entry -> entry.getValue().update());
 				}
@@ -58,7 +58,7 @@ public final class SlideState {
 
 	public static void onPlayerLeft(Minecraft minecraft) {
 		RenderSystem.recordRenderCall(() -> {
-			ConcurrentHashMap<String, SlideState> map = sCache.getAndSet(new ConcurrentHashMap<>());
+			ConcurrentHashMap<SlideStateProperties, SlideState> map = sCache.getAndSet(new ConcurrentHashMap<>());
 			map.values().forEach(s -> s.mSlide.close());
 			Slideshow.LOGGER.debug("Release {} slide images", map.size());
 			map.clear();
@@ -82,11 +82,13 @@ public final class SlideState {
 	}
 
 	@Nullable
-	public static Slide getSlide(@Nonnull String location) {
+	public static Slide getSlide(@Nonnull String location, boolean enableLod) {
 		if (location.isEmpty()) {
 			return null;
 		}
-		return sCache.getAcquire().computeIfAbsent(location, SlideState::new).getWithUpdate();
+		SlideStateProperties slideStateProperties = new SlideStateProperties(location, enableLod);
+
+		return sCache.getAcquire().computeIfAbsent(slideStateProperties, (prop) -> new SlideState(prop.getLocation(), enableLod)).getWithUpdate();
 	}
 
 	/**
@@ -97,7 +99,7 @@ public final class SlideState {
 
 	private int mCounter;
 
-	private SlideState(String location) {
+	private SlideState(String location, boolean enableLod) {
 		URI uri = createURI(location);
 		if (uri == null) {
 			mSlide = Slide.empty();
@@ -107,7 +109,7 @@ public final class SlideState {
 			mSlide = Slide.loading();
 			mState = State.LOADING;
 			mCounter = RECYCLE_SECONDS;
-			ImageCache.getInstance().getResource(uri, true).thenCompose(SlideState::createTexture)
+			ImageCache.getInstance().getResource(uri, true).thenCompose((data) -> SlideState.createTexture(data, enableLod))
 					.thenAccept(textureProvider -> {
 						if (mState == State.LOADING) {
 							mSlide = Slide.make(textureProvider);
@@ -178,10 +180,10 @@ public final class SlideState {
 	 * @return texture
 	 */
 	@Nonnull
-	private static CompletableFuture<TextureProvider> createTexture(byte[] data) {
+	private static CompletableFuture<TextureProvider> createTexture(byte[] data, boolean enableLod) {
 		return CompletableFuture.supplyAsync(
 				GIFDecoder.checkMagic(data) ? () -> new AnimatedTextureProvider(data) :
-						() -> new StaticTextureProvider(data), RENDER_EXECUTOR);
+						() -> new StaticTextureProvider(data, enableLod), RENDER_EXECUTOR);
 	}
 
 	@Nullable

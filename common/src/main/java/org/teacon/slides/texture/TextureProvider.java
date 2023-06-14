@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
 public interface TextureProvider extends AutoCloseable {
 
 	@Nonnull
-	SlideRenderType updateAndGet(long tick, float partialTick, boolean enableLod);
+	SlideRenderType updateAndGet(long tick, float partialTick);
 
 	int getWidth();
 

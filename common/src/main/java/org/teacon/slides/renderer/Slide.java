@@ -70,7 +70,7 @@ public abstract class Slide implements AutoCloseable {
 						   @NotNull Matrix3f normal, float width, float height, int color,
 						   int light, int overlay, boolean front, boolean back, boolean enableLod, long tick, float partialTick) {
 			int red = (color >> 16) & 255, green = (color >> 8) & 255, blue = color & 255, alpha = color >>> 24;
-			VertexConsumer builder = source.getBuffer(mTexture.updateAndGet(tick, partialTick, enableLod));
+			VertexConsumer builder = source.getBuffer(mTexture.updateAndGet(tick, partialTick));
 			if (front) {
 				builder.vertex(matrix, 0, 1 / 192F, 1)
 						.color(red, green, blue, alpha).uv(0, 1)

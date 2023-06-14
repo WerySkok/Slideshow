@@ -20,7 +20,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public class ProjectorRenderer extends BlockEntityRendererMapper<ProjectorBlockEntity> {
-
 	public ProjectorRenderer(BlockEntityRenderDispatcher dispatcher) {
 		super(dispatcher);
 	}
@@ -33,10 +32,11 @@ public class ProjectorRenderer extends BlockEntityRendererMapper<ProjectorBlockE
 //        renderBoundingBox(pStack, tile);
 
 		// always update slide state
-		final Slide slide = SlideState.getSlide(tile.mLocation);
+		final Slide slide = SlideState.getSlide(tile.mLocation, !tile.mDisableLod);
 		if (slide == null) {
 			return;
 		}
+
 		if (!tile.getBlockState().getValue(BlockStateProperties.POWERED)) {
 			int color = tile.mColor;
 			if ((color & 0xFF000000) == 0) {
