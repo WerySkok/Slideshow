@@ -88,7 +88,7 @@ public class ProjectorRenderer extends BlockEntityRendererMapper<ProjectorBlockE
 
 		boolean canShowDiscordWarn = Minecraft.getInstance().player.isCreative() || Minecraft.getInstance().player.isSpectator();
 
-		if(Config.getDiscordWarnEnabled() && canShowDiscordWarn) {
+		if(Config.getDiscordVisualizerEnabled() && canShowDiscordWarn) {
 			try {
 				URI uri = new URI(tile.mLocation);
 				if(uri.getHost().contains("discord")) {

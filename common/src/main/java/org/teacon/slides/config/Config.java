@@ -20,10 +20,11 @@ public class Config {
     private static String host = "127.0.0.1";
     private static int port = 8080;
     private static int viewDistance = 128;
-    private static boolean showDiscordProjectorOnCreative = false;
+    private static boolean visualizeDiscordProjectorOnCreative = false;
     private static HttpHost PROXY;
 
     private static final String PROXY_SWITCH = "proxySwitch";
+    private static final String VISUALIZE_DISCORD_PROJECTOR = "visualizeDiscordProjector";
     private static final String HOST = "host";
     private static final String PORT = "port";
     private static final String VIEW_DISTANCE = "slideshowViewDistance";
@@ -51,14 +52,20 @@ public class Config {
         return PROXY;
     }
 
-    public static boolean getDiscordWarnEnabled() {
-        return showDiscordProjectorOnCreative;
+    public static boolean getDiscordVisualizerEnabled() {
+        return visualizeDiscordProjectorOnCreative;
     }
 
     public static boolean setProxySwitch(boolean proxySwitch) {
         Config.proxySwitch = proxySwitch;
         writeToFile();
         return proxySwitch;
+    }
+
+    public  static boolean setDiscordVisualizerEnabled(boolean showDiscordProjectorOnCreative) {
+        Config.visualizeDiscordProjectorOnCreative = showDiscordProjectorOnCreative;
+        writeToFile();
+        return showDiscordProjectorOnCreative;
     }
 
     public static String setHost(String host) {
@@ -101,7 +108,7 @@ public class Config {
             }
 
             try {
-                showDiscordProjectorOnCreative = jsonConfig.get("showDiscordUrlProjector").getAsBoolean();
+                visualizeDiscordProjectorOnCreative = jsonConfig.get(VISUALIZE_DISCORD_PROJECTOR).getAsBoolean();
             } catch (Exception ignored) {
             }
 
@@ -126,7 +133,7 @@ public class Config {
         jsonConfig.addProperty(HOST, host);
         jsonConfig.addProperty(PORT, port);
         jsonConfig.addProperty(VIEW_DISTANCE, viewDistance);
-        jsonConfig.addProperty("showDiscordUrlProjector", showDiscordProjectorOnCreative);
+        jsonConfig.addProperty(VISUALIZE_DISCORD_PROJECTOR, visualizeDiscordProjectorOnCreative);
         try {
             if (!Files.exists(CONFIG_PATH.getParent())) {
                 Files.createDirectories(CONFIG_PATH.getParent());

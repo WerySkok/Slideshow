@@ -21,6 +21,7 @@
     "options.slider_show.off": "Disabled",
     "gui.slide_show.options": "Slideshow Options",
     "options.slide_show.proxy_switch": "Enable proxy",
+    "options.slide_show.discord_visualized": "Visualize projector with Discord URL (Red Box)",
     "options.slide_show.host": "Host",
     "options.slide_show.port": "Port",
     "options.slide_show.view_distance": "Max View Distance"
