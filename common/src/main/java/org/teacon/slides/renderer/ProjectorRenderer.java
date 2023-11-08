@@ -1,14 +1,18 @@
 package org.teacon.slides.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.teacon.slides.config.Config;
@@ -17,6 +21,7 @@ import org.teacon.slides.projector.ProjectorBlock;
 import org.teacon.slides.projector.ProjectorBlockEntity;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.net.URI;
 
 @ParametersAreNonnullByDefault
 public class ProjectorRenderer extends BlockEntityRendererMapper<ProjectorBlockEntity> {
@@ -36,6 +41,7 @@ public class ProjectorRenderer extends BlockEntityRendererMapper<ProjectorBlockE
 		if (slide == null) {
 			return;
 		}
+
 
 		if (!tile.getBlockState().getValue(BlockStateProperties.POWERED)) {
 			int color = tile.mColor;
@@ -78,6 +84,128 @@ public class ProjectorRenderer extends BlockEntityRendererMapper<ProjectorBlockE
 					SlideState.getAnimationTick(), partialTick);
 
 			pStack.popPose();
+		}
+
+		boolean canShowDiscordWarn = Minecraft.getInstance().player.isCreative() || Minecraft.getInstance().player.isSpectator();
+
+		if(Config.getDiscordWarnEnabled() && canShowDiscordWarn) {
+			try {
+				URI uri = new URI(tile.mLocation);
+				if(uri.getHost().contains("discord")) {
+					pStack.pushPose();
+					VertexConsumer builder = source.getBuffer(RenderType.textSeeThrough(new ResourceLocation("slide_show:textures/gui/slide_default.png")));
+					builder.vertex(pStack.last().pose(), 0, 0, 1)
+							.color(220, 40, 40, 255).uv(0.5F, 0.6F)
+							.uv2(OverlayTexture.NO_OVERLAY)
+							.normal(pStack.last().normal(), 0, 1, 0).endVertex();
+					builder.vertex(pStack.last().pose(), 1, 0, 1)
+							.color(220, 40, 40, 255).uv(0.6F, 0.6F)
+							.uv2(OverlayTexture.NO_OVERLAY)
+							.normal(pStack.last().normal(), 0, 1, 0).endVertex();
+					builder.vertex(pStack.last().pose(), 1, 1, 1)
+							.color(220, 40, 40, 255).uv(0.6F, 0.4F)
+							.uv2(OverlayTexture.NO_OVERLAY)
+							.normal(pStack.last().normal(), 0, 1, 0).endVertex();
+					builder.vertex(pStack.last().pose(), 0, 1, 1)
+							.color(220, 40, 40, 255).uv(0.5F, 0.4F)
+							.uv2(OverlayTexture.NO_OVERLAY)
+							.normal(pStack.last().normal(), 0, 1, 0).endVertex();
+					// Face 2
+					builder.vertex(pStack.last().pose(), 1, 0, 0)
+							.color(220, 40, 40, 255).uv(0.5F, 0.6F)
+							.uv2(OverlayTexture.NO_OVERLAY)
+							.normal(pStack.last().normal(), 0, 1, 0).endVertex();
+					builder.vertex(pStack.last().pose(), 0, 0, 0)
+							.color(220, 40, 40, 255).uv(0.6F, 0.6F)
+							.uv2(OverlayTexture.NO_OVERLAY)
+							.normal(pStack.last().normal(), 0, 1, 0).endVertex();
+					builder.vertex(pStack.last().pose(), 0, 1, 0)
+							.color(220, 40, 40, 255).uv(0.6F, 0.4F)
+							.uv2(OverlayTexture.NO_OVERLAY)
+							.normal(pStack.last().normal(), 0, 1, 0).endVertex();
+					builder.vertex(pStack.last().pose(), 1, 1, 0)
+							.color(220, 40, 40, 255).uv(0.5F, 0.4F)
+							.uv2(OverlayTexture.NO_OVERLAY)
+							.normal(pStack.last().normal(), 0, 1, 0).endVertex();
+
+					// Face 3
+					builder.vertex(pStack.last().pose(), 0, 0, 0)
+							.color(220, 40, 40, 255).uv(0.5F, 0.6F)
+							.uv2(OverlayTexture.NO_OVERLAY)
+							.normal(pStack.last().normal(), 0, 1, 0).endVertex();
+					builder.vertex(pStack.last().pose(), 0, 0, 1)
+							.color(220, 40, 40, 255).uv(0.6F, 0.6F)
+							.uv2(OverlayTexture.NO_OVERLAY)
+							.normal(pStack.last().normal(), 0, 1, 0).endVertex();
+					builder.vertex(pStack.last().pose(), 0, 1, 1)
+							.color(220, 40, 40, 255).uv(0.6F, 0.4F)
+							.uv2(OverlayTexture.NO_OVERLAY)
+							.normal(pStack.last().normal(), 0, 1, 0).endVertex();
+					builder.vertex(pStack.last().pose(), 0, 1, 0)
+							.color(220, 40, 40, 255).uv(0.5F, 0.4F)
+							.uv2(OverlayTexture.NO_OVERLAY)
+							.normal(pStack.last().normal(), 0, 1, 0).endVertex();
+
+					// Face 4
+
+					builder.vertex(pStack.last().pose(), 1, 0, 1)
+							.color(220, 40, 40, 255).uv(0.5F, 0.6F)
+							.uv2(OverlayTexture.NO_OVERLAY)
+							.normal(pStack.last().normal(), 0, 1, 0).endVertex();
+					builder.vertex(pStack.last().pose(), 1, 0, 0)
+							.color(220, 40, 40, 255).uv(0.6F, 0.6F)
+							.uv2(OverlayTexture.NO_OVERLAY)
+							.normal(pStack.last().normal(), 0, 1, 0).endVertex();
+					builder.vertex(pStack.last().pose(), 1, 1, 0)
+							.color(220, 40, 40, 255).uv(0.6F, 0.4F)
+							.uv2(OverlayTexture.NO_OVERLAY)
+							.normal(pStack.last().normal(), 0, 1, 0).endVertex();
+					builder.vertex(pStack.last().pose(), 1, 1, 1)
+							.color(220, 40, 40, 255).uv(0.5F, 0.4F)
+							.uv2(OverlayTexture.NO_OVERLAY)
+							.normal(pStack.last().normal(), 0, 1, 0).endVertex();
+
+					// top
+					builder.vertex(pStack.last().pose(), 0, 1, 1)
+							.color(255, 40, 40, 255).uv(0.5F, 0.6F)
+							.uv2(OverlayTexture.NO_OVERLAY)
+							.normal(pStack.last().normal(), 0, 1, 0).endVertex();
+					builder.vertex(pStack.last().pose(), 1, 1, 1)
+							.color(255, 40, 40, 255).uv(0.6F, 0.6F)
+							.uv2(OverlayTexture.NO_OVERLAY)
+							.normal(pStack.last().normal(), 0, 1, 0).endVertex();
+					builder.vertex(pStack.last().pose(), 1, 1, 0)
+							.color(255, 40, 40, 255).uv(0.6F, 0.4F)
+							.uv2(OverlayTexture.NO_OVERLAY)
+							.normal(pStack.last().normal(), 0, 1, 0).endVertex();
+					builder.vertex(pStack.last().pose(), 0, 1, 0)
+							.color(255, 40, 40, 255).uv(0.5F, 0.4F)
+							.uv2(OverlayTexture.NO_OVERLAY)
+							.normal(pStack.last().normal(), 0, 1, 0).endVertex();
+
+					// bottom
+					// top
+					builder.vertex(pStack.last().pose(), 1, 0, 1)
+							.color(255, 40, 40, 255).uv(0.5F, 0.6F)
+							.uv2(OverlayTexture.NO_OVERLAY)
+							.normal(pStack.last().normal(), 0, 1, 0).endVertex();
+					builder.vertex(pStack.last().pose(), 0, 0, 1)
+							.color(255, 40, 40, 255).uv(0.6F, 0.6F)
+							.uv2(OverlayTexture.NO_OVERLAY)
+							.normal(pStack.last().normal(), 0, 1, 0).endVertex();
+					builder.vertex(pStack.last().pose(), 0, 0, 0)
+							.color(255, 40, 40, 255).uv(0.6F, 0.4F)
+							.uv2(OverlayTexture.NO_OVERLAY)
+							.normal(pStack.last().normal(), 0, 1, 0).endVertex();
+					builder.vertex(pStack.last().pose(), 1, 0, 0)
+							.color(255, 40, 40, 255).uv(0.5F, 0.4F)
+							.uv2(OverlayTexture.NO_OVERLAY)
+							.normal(pStack.last().normal(), 0, 1, 0).endVertex();
+					pStack.popPose();
+				}
+			} catch (Exception ignored) {
+
+			}
 		}
 	}
 

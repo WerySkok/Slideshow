@@ -40,7 +40,7 @@ shadowJar {
 	exclude "architectury.common.json"
 
 	configurations = [project.configurations.shadowCommon]
-	classifier "dev-shadow"
+	archiveClassifier.set("dev-shadow")
 	relocate "org.apache.http", "org.teacon.libraries.org.apache.http"
 	relocate "org.apache.commons.codec", "org.teacon.libraries.org.apache.commons.codec"
 	relocate "org.apache.commons.logging", "org.teacon.libraries.org.apache.commons.logging"
@@ -50,7 +50,7 @@ remapJar {
 	injectAccessWidener = true
 	input.set shadowJar.archiveFile
 	dependsOn shadowJar
-	classifier null
+	archiveClassifier.set(null)
 }
 
 components.java {

@@ -20,6 +20,7 @@ public class Config {
     private static String host = "127.0.0.1";
     private static int port = 8080;
     private static int viewDistance = 128;
+    private static boolean showDiscordProjectorOnCreative = false;
     private static HttpHost PROXY;
 
     private static final String PROXY_SWITCH = "proxySwitch";
@@ -48,6 +49,10 @@ public class Config {
 
     public static HttpHost getPROXY() {
         return PROXY;
+    }
+
+    public static boolean getDiscordWarnEnabled() {
+        return showDiscordProjectorOnCreative;
     }
 
     public static boolean setProxySwitch(boolean proxySwitch) {
@@ -95,6 +100,11 @@ public class Config {
             } catch (Exception ignored) {
             }
 
+            try {
+                showDiscordProjectorOnCreative = jsonConfig.get("showDiscordUrlProjector").getAsBoolean();
+            } catch (Exception ignored) {
+            }
+
             if (proxySwitch) {
                 PROXY = new HttpHost(host, port);
                 LOGGER.info("Proxy loaded");
@@ -116,6 +126,7 @@ public class Config {
         jsonConfig.addProperty(HOST, host);
         jsonConfig.addProperty(PORT, port);
         jsonConfig.addProperty(VIEW_DISTANCE, viewDistance);
+        jsonConfig.addProperty("showDiscordUrlProjector", showDiscordProjectorOnCreative);
         try {
             if (!Files.exists(CONFIG_PATH.getParent())) {
                 Files.createDirectories(CONFIG_PATH.getParent());
