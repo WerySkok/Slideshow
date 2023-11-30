@@ -53,7 +53,7 @@ public class ConfigScreen extends ScreenMapper implements IGui {
         setPositionAndWidth(textFieldPort, width - (SQUARE_SIZE * 10) - BUTTON_WIDTH, (SQUARE_SIZE + TEXT_FIELD_PADDING) * (i++) + SQUARE_SIZE, BUTTON_WIDTH - TEXT_PADDING - font.width("256") + (SQUARE_SIZE * 9));
         setPositionAndWidth(sliderViewDistance, width - (SQUARE_SIZE * 10) - BUTTON_WIDTH, (SQUARE_SIZE + TEXT_FIELD_PADDING) * i + SQUARE_SIZE, BUTTON_WIDTH - TEXT_PADDING - font.width("256") + (SQUARE_SIZE * 9));
         setButtonText(buttonProxySwitch, proxySwitch);
-        setButtonText(discordVisualizerSwitch, proxySwitch);
+        setButtonText(discordVisualizerSwitch, discordUrlVisualized);
         textFieldHost.setValue(Config.getHost());
         textFieldPort.setValue(String.valueOf(Config.getPort()));
         sliderViewDistance.setHeight(BUTTON_HEIGHT);
