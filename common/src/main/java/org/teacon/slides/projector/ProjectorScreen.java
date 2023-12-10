@@ -1,11 +1,14 @@
 package org.teacon.slides.projector;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
+import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.core.BlockPos;
@@ -18,6 +21,7 @@ import net.minecraft.world.phys.Vec2;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.glfw.GLFW;
 import org.teacon.slides.Slideshow;
+import org.teacon.slides.data.NumericEditBox;
 import org.teacon.slides.mappings.ScreenMapper;
 import org.teacon.slides.mappings.Text;
 import org.teacon.slides.mappings.UtilitiesClient;
@@ -56,6 +60,9 @@ public final class ProjectorScreen extends ScreenMapper {
 	private EditBox mOffsetXInput;
 	private EditBox mOffsetYInput;
 	private EditBox mOffsetZInput;
+	private EditBox mRotateXInput;
+	private EditBox mRotateYInput;
+	private EditBox mRotateZInput;
 
 	private ImageButton mSwitchSingleSided;
 	private ImageButton mSwitchDoubleSided;
@@ -78,6 +85,9 @@ public final class ProjectorScreen extends ScreenMapper {
 	private final ProjectorBlockEntity mEntity;
 	private final int imageWidth;
 	private final int imageHeight;
+	private float rotX;
+	private float rotY;
+	private float rotZ;
 
 	public ProjectorScreen(BlockPos pos) {
 		super(Text.literal(""));
@@ -216,6 +226,39 @@ public final class ProjectorScreen extends ScreenMapper {
 		mOffsetZInput.setValue(floatToString(mEntity.mOffsetZ));
 		addDrawableChild(mOffsetZInput);
 
+		mRotateXInput = new NumericEditBox(leftPos + 30, topPos + 214, 29, 16);
+		mRotateXInput.setResponder(input -> {
+			try {
+				rotX = Float.parseFloat(input);
+			} catch (Exception e) {
+				rotX = 0;
+			}
+		});
+		mRotateXInput.setValue(floatToString(mEntity.mRotateX));
+		addDrawableChild(mRotateXInput);
+
+		mRotateYInput = new NumericEditBox(leftPos + 84, topPos + 214, 29, 16);
+		mRotateYInput.setResponder(input -> {
+			try {
+				rotY = Float.parseFloat(input);
+			} catch (Exception e) {
+				rotY = 0;
+			}
+		});
+		mRotateYInput.setValue(floatToString(mEntity.mRotateY));
+		addDrawableChild(mRotateYInput);
+
+		mRotateZInput = new NumericEditBox(leftPos + 138, topPos + 214, 29, 16);
+		mRotateZInput.setResponder(input -> {
+			try {
+				rotZ = Float.parseFloat(input);
+			} catch (Exception e) {
+				rotZ = 0;
+			}
+		});
+		mRotateZInput.setValue(floatToString(mEntity.mRotateZ));
+		addDrawableChild(mRotateZInput);
+
 		// internal rotation buttons
 		addDrawableChild(new ImageButton(leftPos + 117, topPos + 153, 18, 19, 179, 153, 0, GUI_TEXTURE, button -> {
 			ProjectorBlock.InternalRotation newRotation = mRotation.flip();
@@ -297,6 +340,9 @@ public final class ProjectorScreen extends ScreenMapper {
 		mOffsetXInput.tick();
 		mOffsetYInput.tick();
 		mOffsetZInput.tick();
+		mRotateXInput.tick();
+		mRotateYInput.tick();
+		mRotateZInput.tick();
 	}
 
 	@Override
@@ -325,6 +371,9 @@ public final class ProjectorScreen extends ScreenMapper {
 		}
 		mEntity.mDoubleSided = mDoubleSided;
 		mEntity.mDisableLod = mDisableLod;
+		mEntity.mRotateX = rotX;
+		mEntity.mRotateY = rotY;
+		mEntity.mRotateZ = rotZ;
 		new ProjectorUpdatePacket(mEntity, mRotation).sendToServer();
 	}
 
@@ -342,6 +391,9 @@ public final class ProjectorScreen extends ScreenMapper {
 				|| mOffsetXInput.keyPressed(keyCode, scanCode, modifier) || mOffsetXInput.canConsumeInput()
 				|| mOffsetYInput.keyPressed(keyCode, scanCode, modifier) || mOffsetYInput.canConsumeInput()
 				|| mOffsetZInput.keyPressed(keyCode, scanCode, modifier) || mOffsetZInput.canConsumeInput()
+				|| mRotateXInput.keyPressed(keyCode, scanCode, modifier) || mRotateXInput.canConsumeInput()
+				|| mRotateYInput.keyPressed(keyCode, scanCode, modifier) || mRotateYInput.canConsumeInput()
+				|| mRotateZInput.keyPressed(keyCode, scanCode, modifier) || mRotateZInput.canConsumeInput()
 				|| super.keyPressed(keyCode, scanCode, modifier);
 	}
 
@@ -356,15 +408,42 @@ public final class ProjectorScreen extends ScreenMapper {
 			super.render(matrices, mouseX, mouseY, delta);
 
 			int alpha = mImageColor >>> 24;
+			float rendRotX = (float)((rotX * Math.PI) / 180);
+			float rendRotY = (float)((rotY * Math.PI) / 180);
+			float rendRotZ = (float)((rotZ * Math.PI) / 180);
+			int red = (mImageColor >> 16) & 255, green = (mImageColor >> 8) & 255, blue = mImageColor & 255;
+			int size = 17;
+
 			if (alpha > 0) {
-				int red = (mImageColor >> 16) & 255, green = (mImageColor >> 8) & 255, blue = mImageColor & 255;
-				RenderUtils.setShaderColor(red / 255.0F, green / 255.0F, blue / 255.0F, alpha / 255.0F);
 				blit(matrices, 38 + leftPos, 157 + topPos, 180, 194, 10, 10);
-				blit(matrices, 82 + leftPos, 185 + topPos, 180, 194, 17, 17);
+
+				matrices.pushPose();
+				matrices.translate(82 + leftPos + (size / 2), 185 + topPos + (size / 2), 0);
+				matrices.mulPose(Quaternion.fromXYZ(-rendRotX, -rendRotZ, -rendRotY));
+				RenderSystem.disableDepthTest();
+				RenderSystem.disableCull();
+				// border
+				fill(matrices, -(size / 2)-1, -(size / 2)-1, 10, 10, 0xFF464646);
+
+				RenderUtils.setShaderColor(red / 255.0F, green / 255.0F, blue / 255.0F, alpha / 255.0F);
+				blit(matrices, -(size / 2), -(size / 2), 180, 194, size, size);
+				RenderSystem.enableCull();
+				RenderSystem.enableDepthTest();
+				matrices.popPose();
 			}
 
+			matrices.pushPose();
+			matrices.translate(82 + leftPos + (size / 2), 185 + topPos + (size / 2), 0);
+			matrices.mulPose(Quaternion.fromXYZ(-rendRotX, -rendRotZ, -rendRotY));
+
+			RenderSystem.disableDepthTest();
+			RenderSystem.disableCull();
 			RenderUtils.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-			blit(matrices, 82 + leftPos, 185 + topPos, 202, 194 - mRotation.ordinal() * 20, 17, 17);
+			blit(matrices, -(size / 2), -(size / 2), 202, 194 - mRotation.ordinal() * 20, size, size);
+			RenderSystem.enableCull();
+			RenderSystem.enableDepthTest();
+
+			matrices.popPose();
 
 			drawCenteredStringWithoutShadow(matrices, font, IMAGE_TEXT, width / 2F, 12 + topPos);
 			drawCenteredStringWithoutShadow(matrices, font, OFFSET_TEXT, width / 2F, 86 + topPos);

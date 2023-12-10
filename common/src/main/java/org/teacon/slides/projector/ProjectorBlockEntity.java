@@ -22,6 +22,9 @@ public final class ProjectorBlockEntity extends BlockEntityClientSerializableMap
 	public float mOffsetX = 0;
 	public float mOffsetY = 0;
 	public float mOffsetZ = 0;
+	public float mRotateX = 0;
+	public float mRotateY = 0;
+	public float mRotateZ = 0;
 	public boolean mDisableLod = false;
 	public boolean mDoubleSided = true;
 
@@ -39,6 +42,9 @@ public final class ProjectorBlockEntity extends BlockEntityClientSerializableMap
 		compoundTag.putFloat("OffsetX", mOffsetX);
 		compoundTag.putFloat("OffsetY", mOffsetY);
 		compoundTag.putFloat("OffsetZ", mOffsetZ);
+		compoundTag.putFloat("RotateX", mRotateX);
+		compoundTag.putFloat("RotateY", mRotateY);
+		compoundTag.putFloat("RotateZ", mRotateZ);
 		compoundTag.putBoolean("DoubleSided", mDoubleSided);
 		compoundTag.putBoolean("DisableLod", mDisableLod);
 	}
@@ -53,6 +59,10 @@ public final class ProjectorBlockEntity extends BlockEntityClientSerializableMap
 		mOffsetX = compoundTag.getFloat("OffsetX");
 		mOffsetY = compoundTag.getFloat("OffsetY");
 		mOffsetZ = compoundTag.getFloat("OffsetZ");
+		mRotateX = compoundTag.getFloat("RotateX");
+		mRotateY = compoundTag.getFloat("RotateY");
+		mRotateZ = compoundTag.getFloat("RotateZ");
+
 		mDoubleSided = compoundTag.getBoolean("DoubleSided");
 		mDisableLod = compoundTag.getBoolean("DisableLod");
 	}

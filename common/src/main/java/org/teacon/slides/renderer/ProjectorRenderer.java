@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
+import com.mojang.math.Quaternion;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -68,13 +69,20 @@ public class ProjectorRenderer extends BlockEntityRendererMapper<ProjectorBlockE
         // matrix 2: rotation
         pose.multiply(direction.getRotation());
         normal.mul(direction.getRotation());
+		// matrix 2a: User rotation
+		float rotX = (float)((Math.PI * tile.mRotateX) / 180);
+		float rotY = (float)((Math.PI * tile.mRotateY) / 180);
+		float rotZ = (float)((Math.PI * tile.mRotateZ) / 180);
+		pStack.mulPose(Quaternion.fromXYZ(rotX, rotY, rotZ));
         // matrix 3: translation to block surface
         pStack.translate(0.0f, 0.5f, 0.0f);
         // matrix 4: internal rotation
         rotation.transform(pose);
         rotation.transform(normal);
+
         // matrix 5: translation for slide
         pStack.translate(-0.5F, 0.0F, 0.5F - tile.mHeight);
+
         // matrix 6: offset for slide
         pStack.translate(tile.mOffsetX, -tile.mOffsetZ, tile.mOffsetY);
         // matrix 7: scaling
