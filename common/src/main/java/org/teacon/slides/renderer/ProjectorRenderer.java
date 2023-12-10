@@ -38,12 +38,12 @@ public class ProjectorRenderer extends BlockEntityRendererMapper<ProjectorBlockE
 
 		// always update slide state
 		final Slide slide = SlideState.getSlide(tile.mLocation, !tile.mDisableLod);
+		final boolean projectorDisabled = tile.getBlockState().getValue(BlockStateProperties.POWERED);
 		if (slide == null) {
 			return;
 		}
 
-
-		if (!tile.getBlockState().getValue(BlockStateProperties.POWERED)) {
+		if (!projectorDisabled) {
 			int color = tile.mColor;
 			if ((color & 0xFF000000) == 0) {
 				return;
@@ -86,9 +86,9 @@ public class ProjectorRenderer extends BlockEntityRendererMapper<ProjectorBlockE
 			pStack.popPose();
 		}
 
-		boolean canShowDiscordWarn = Minecraft.getInstance().player.isCreative() || Minecraft.getInstance().player.isSpectator();
+		boolean canShowDiscordHighlight = Minecraft.getInstance().player.isCreative() || Minecraft.getInstance().player.isSpectator();
 
-		if(Config.getDiscordVisualizerEnabled() && canShowDiscordWarn) {
+		if(Config.getDiscordVisualizerEnabled() && !projectorDisabled && canShowDiscordHighlight) {
 			try {
 				URI uri = new URI(tile.mLocation);
 				if(uri.getHost().contains("discord")) {
