@@ -8,7 +8,6 @@ import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.core.BlockPos;
@@ -21,7 +20,7 @@ import net.minecraft.world.phys.Vec2;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.glfw.GLFW;
 import org.teacon.slides.Slideshow;
-import org.teacon.slides.data.NumericEditBox;
+import org.teacon.slides.data.RotationEditBox;
 import org.teacon.slides.mappings.ScreenMapper;
 import org.teacon.slides.mappings.Text;
 import org.teacon.slides.mappings.UtilitiesClient;
@@ -226,7 +225,7 @@ public final class ProjectorScreen extends ScreenMapper {
 		mOffsetZInput.setValue(floatToString(mEntity.mOffsetZ));
 		addDrawableChild(mOffsetZInput);
 
-		mRotateXInput = new NumericEditBox(leftPos + 30, topPos + 214, 29, 16);
+		mRotateXInput = new RotationEditBox(leftPos + 30, topPos + 214, 29, 16);
 		mRotateXInput.setResponder(input -> {
 			try {
 				rotX = Float.parseFloat(input);
@@ -237,7 +236,7 @@ public final class ProjectorScreen extends ScreenMapper {
 		mRotateXInput.setValue(floatToString(mEntity.mRotateX));
 		addDrawableChild(mRotateXInput);
 
-		mRotateYInput = new NumericEditBox(leftPos + 84, topPos + 214, 29, 16);
+		mRotateYInput = new RotationEditBox(leftPos + 84, topPos + 214, 29, 16);
 		mRotateYInput.setResponder(input -> {
 			try {
 				rotY = Float.parseFloat(input);
@@ -248,7 +247,7 @@ public final class ProjectorScreen extends ScreenMapper {
 		mRotateYInput.setValue(floatToString(mEntity.mRotateY));
 		addDrawableChild(mRotateYInput);
 
-		mRotateZInput = new NumericEditBox(leftPos + 138, topPos + 214, 29, 16);
+		mRotateZInput = new RotationEditBox(leftPos + 138, topPos + 214, 29, 16);
 		mRotateZInput.setResponder(input -> {
 			try {
 				rotZ = Float.parseFloat(input);
