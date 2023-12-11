@@ -73,6 +73,7 @@ public class ProjectorRenderer extends BlockEntityRendererMapper<ProjectorBlockE
 		float rotX = (float)((Math.PI * tile.mRotateX) / 180);
 		float rotY = (float)((Math.PI * tile.mRotateY) / 180);
 		float rotZ = (float)((Math.PI * tile.mRotateZ) / 180);
+
 		pStack.mulPose(Quaternion.fromXYZ(rotX, rotY, rotZ));
         // matrix 3: translation to block surface
         pStack.translate(0.0f, 0.5f, 0.0f);
