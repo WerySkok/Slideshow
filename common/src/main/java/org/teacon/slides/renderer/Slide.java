@@ -1,8 +1,8 @@
 package org.teacon.slides.renderer;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Matrix4f;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
@@ -12,6 +12,7 @@ import org.teacon.slides.Slideshow;
 import org.teacon.slides.texture.TextureProvider;
 
 import javax.annotation.Nonnull;
+import java.lang.Math;
 
 /**
  * Represents a slide drawable, with immutable storage.

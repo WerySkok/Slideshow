@@ -21,7 +21,7 @@ public abstract class RenderUtils extends RenderType {
 	}
 
 	public static void startDrawingTexture(int textureId) {
-		RenderSystem.enableTexture();
+		// RenderSystem.enableTexture();
 		RenderSystem.setShaderTexture(0, textureId);
 	}
 

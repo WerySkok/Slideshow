@@ -2,10 +2,9 @@ package org.teacon.slides.projector;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
-import com.mojang.math.Vector4f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.EditBox;
@@ -111,7 +110,7 @@ public final class ProjectorScreen extends ScreenMapper {
 		if (mEntity == null) {
 			return;
 		}
-		minecraft.keyboardHandler.setSendRepeatsToGui(true);
+		//minecraft.keyboardHandler.setSendRepeatsToGui(true);
 
 		final int leftPos = (width - imageWidth) / 2;
 		final int topPos = (height - imageHeight) / 2;
@@ -347,7 +346,7 @@ public final class ProjectorScreen extends ScreenMapper {
 	@Override
 	public void removed() {
 		super.removed();
-		minecraft.keyboardHandler.setSendRepeatsToGui(false);
+		//minecraft.keyboardHandler.setSendRepeatsToGui(false);
 		if (mEntity == null) {
 			return;
 		}
@@ -418,7 +417,7 @@ public final class ProjectorScreen extends ScreenMapper {
 
 				matrices.pushPose();
 				matrices.translate(82 + leftPos + (size / 2), 185 + topPos + (size / 2), 0);
-				matrices.mulPose(Quaternion.fromXYZ(-rendRotX, -rendRotZ, -rendRotY));
+				matrices.mulPose(new Quaternionf(-rendRotX, -rendRotZ, -rendRotY, 1));
 				RenderSystem.disableDepthTest();
 				RenderSystem.disableCull();
 				// border
@@ -433,7 +432,7 @@ public final class ProjectorScreen extends ScreenMapper {
 
 			matrices.pushPose();
 			matrices.translate(82 + leftPos + (size / 2), 185 + topPos + (size / 2), 0);
-			matrices.mulPose(Quaternion.fromXYZ(-rendRotX, -rendRotZ, -rendRotY));
+			matrices.mulPose(new Quaternionf(-rendRotX, -rendRotZ, -rendRotY, 1));
 
 			RenderSystem.disableDepthTest();
 			RenderSystem.disableCull();
@@ -491,24 +490,24 @@ public final class ProjectorScreen extends ScreenMapper {
 											   ProjectorBlock.InternalRotation rotation) {
 		Vector4f center = new Vector4f(0.5F * size.x, 0.0F, 0.5F * size.y, 1.0F);
 		// matrix 6: offset for slide (center[new] = center[old] + offset)
-		center.transform(Matrix4f.createTranslateMatrix(relatedOffset.x(), -relatedOffset.z(), relatedOffset.y()));
+		center.add(relatedOffset.x() * center.w(), -relatedOffset.z() * center.w(), relatedOffset.y() * center.w(), 0.0F);
 		// matrix 5: translation for slide
-		center.transform(Matrix4f.createTranslateMatrix(-0.5F, 0.0F, 0.5F - size.y));
+		center.add(-0.5F * center.w(), 0.0F, 0.5F * center.w() - size.y * center.w(), 0.0F);
 		// matrix 4: internal rotation
-		rotation.transform(center);
+		center = rotation.transform(center);
 		// ok, that's enough
-		return new Vector3f(center.x(), center.y(), center.z());
+		return new Vector3f(center.x() / center.w(), center.y() / center.w(), center.z() / center.w());
 	}
 
 	private static Vector3f absoluteToRelative(Vector3f absoluteOffset, Vec2 size,
 											   ProjectorBlock.InternalRotation rotation) {
-		Vector4f center = new Vector4f(absoluteOffset);
+		Vector4f center = new Vector4f(absoluteOffset, 1.0F);
 		// inverse matrix 4: internal rotation
 		rotation.invert().transform(center);
 		// inverse matrix 5: translation for slide
-		center.transform(Matrix4f.createTranslateMatrix(0.5F, 0.0F, -0.5F + size.y));
+		center.add(0.5F * center.w(), 0.0F, -0.5F * center.w() + size.y * center.w(), 0.0F);
 		// subtract (offset = center[new] - center[old])
-		center.transform(Matrix4f.createTranslateMatrix(-0.5F * size.x, 0.0F, -0.5F * size.y));
+		center.add(-0.5F * size.x * center.w(), 0.0F, -0.5F * size.y * center.w(), 0.0F);
 		// ok, that's enough (remember it is (a, -c, b) => (a, b, c))
 		return new Vector3f(center.x(), center.z(), -center.y());
 	}

@@ -1,5 +1,7 @@
 package org.teacon.slides;
 
+import net.minecraft.client.gui.components.tabs.Tab;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -20,9 +22,9 @@ import org.teacon.slides.mappings.ForgeUtilities;
 @Mod(Slideshow.ID)
 public class SlideshowForge {
 
-	private static final DeferredRegisterHolder<Item> ITEMS = new DeferredRegisterHolder<>(Slideshow.ID, net.minecraft.core.Registry.ITEM_REGISTRY);
-	private static final DeferredRegisterHolder<Block> BLOCKS = new DeferredRegisterHolder<>(Slideshow.ID, net.minecraft.core.Registry.BLOCK_REGISTRY);
-	private static final DeferredRegisterHolder<BlockEntityType<?>> BLOCK_ENTITY_TYPES = new DeferredRegisterHolder<>(Slideshow.ID, net.minecraft.core.Registry.BLOCK_ENTITY_TYPE_REGISTRY);
+	private static final DeferredRegisterHolder<Item> ITEMS = new DeferredRegisterHolder<>(Slideshow.ID, Registries.ITEM);
+	private static final DeferredRegisterHolder<Block> BLOCKS = new DeferredRegisterHolder<>(Slideshow.ID, Registries.BLOCK);
+	private static final DeferredRegisterHolder<BlockEntityType<?>> BLOCK_ENTITY_TYPES = new DeferredRegisterHolder<>(Slideshow.ID, Registries.BLOCK_ENTITY_TYPE);
 
 	static {
 		Slideshow.init(SlideshowForge::registerBlock, SlideshowForge::registerBlockEntityType);
@@ -45,7 +47,8 @@ public class SlideshowForge {
 
 	private static void registerBlock(String path, RegistryObject<Block> block, CreativeModeTab itemGroup) {
 		BLOCKS.register(path, block::get);
-		ITEMS.register(path, () -> new BlockItem(block.get(), new Item.Properties().tab(itemGroup)));
+		ITEMS.register(path, () -> new BlockItem(block.get(), new Item.Properties()));
+
 	}
 
 	private static void registerBlockEntityType(String path, RegistryObject<? extends BlockEntityType<? extends BlockEntityMapper>> blockEntityType) {

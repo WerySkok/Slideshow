@@ -8,9 +8,10 @@ plugins {
 	id "com.github.johnrengelman.shadow" version "7.1.2" apply false
 }
 
-def default_minecraft_version = "1.19.2"
+def default_minecraft_version = "1.19.4"
 def minecraft_version = rootProject.properties.containsKey("buildVersion") ? rootProject.getProperties().get("buildVersion") : default_minecraft_version
 def minecraft_main_version = minecraft_version.split("\\.")[1] as int
+def is_1_19_3 = minecraft_version == "1.19.3" || minecraft_version == "1.19.4"
 
 rootProject.ext.fabric_loader_version = new JsonSlurper().parse(("https://meta.fabricmc.net/v2/versions/loader/" + minecraft_version).toURL())[0]["loader"]["version"]
 rootProject.ext.forge_version = minecraft_version + "-" + new JsonSlurper().parse(("https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json").toURL())["promos"][minecraft_version + "-latest"]
@@ -51,7 +52,7 @@ task setupFiles() {
 	System.out.println("Mod Menu: " + rootProject.mod_menu_version)
 
 	download {
-		src "https://github.com/jonafanho/Minecraft-Mappings/archive/refs/heads/1.${minecraft_main_version}.zip"
+		src "https://github.com/jonafanho/Minecraft-Mappings/archive/refs/heads/${is_1_19_3 ? minecraft_version : "1." + minecraft_main_version}.zip"
 		dest "common/src/main/java/org/teacon/slides/mappings/mappings.zip"
 		overwrite true
 		retries - 1

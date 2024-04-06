@@ -2,6 +2,7 @@ package org.teacon.slides;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.apache.logging.log4j.LogManager;
@@ -31,7 +32,7 @@ public final class Slideshow {
 	}
 
 	public static void init(RegisterBlockItem registerBlockItem, BiConsumer<String, RegistryObject<? extends BlockEntityType<? extends BlockEntityMapper>>> registerBlockEntityType) {
-		registerBlockItem.accept("projector", Registries.PROJECTOR, CreativeModeTab.TAB_MISC);
+		registerBlockItem.accept("projector", Registries.PROJECTOR, CreativeModeTabs.FUNCTIONAL_BLOCKS);
 		registerBlockEntityType.accept("projector", Registries.BLOCK_ENTITY);
 		Registry.registerNetworkReceiver(PACKET_UPDATE, ProjectorUpdatePacket::handle);
 	}
